@@ -5,9 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zctod/go-tool/common/util_server"
 	"go-vrs/config"
+	"go-vrs/lib/logger"
 	"net/http"
 	"time"
 )
+
+var logs = logger.New()
 
 func main()  {
 	g := gin.Default()
@@ -15,6 +18,13 @@ func main()  {
 	// 程序测试
 	g.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello produce!")
+	})
+
+	g.GET("/log/file", func(c *gin.Context) {
+		logs.Println("12312")
+		logs.Warningln("test")
+
+		c.String(http.StatusOK, "ok")
 	})
 
 	startServer(g)

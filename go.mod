@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis v6.15.3+incompatible // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/panjf2000/ants v1.0.0 // indirect
+	github.com/panjf2000/ants v1.0.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect

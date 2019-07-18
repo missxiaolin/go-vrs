@@ -1,16 +1,40 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"github.com/zctod/go-tool/common/util_server"
+	"go-vrs/Model"
 	"go-vrs/config"
 	"go-vrs/lib/logger"
+	"go-vrs/lib/pool"
+	"log"
 	"net/http"
 	"time"
 )
 
 var logs = logger.New()
+var p *pool.Pool
+var redix *redis.Client
+
+func init()  {
+	if redix == nil {
+		redix = redis.NewClient(&redis.Options{
+			Addr:     "127.0.0.1",
+			Password: "",
+			DB:       0,
+		})
+	}
+	if p == nil {
+		var err error
+		p, err = pool.NewPool(0)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
 
 func main()  {
 	g := gin.Default()
@@ -24,6 +48,27 @@ func main()  {
 		logs.Println("12312")
 		logs.Warningln("test")
 
+		c.String(http.StatusOK, "ok")
+	})
+
+	// 协程池测试
+	g.GET("/send", func(c *gin.Context) {
+		for i := 0; i < 50000; i++ {
+			_ = p.Submit(func() {
+				data := Model.Data{
+					Uid:        0,
+					IP:         "127.0.0.1",
+					Content:    "Hello World!",
+					CreateTime: time.Now().UnixNano() / 1e3, // 微秒
+				}
+
+				b, err := json.Marshal(data)
+				if err != nil {
+					log.Fatal(err)
+				}
+				redix.LPush("vrs:log", b)
+			})
+		}
 		c.String(http.StatusOK, "ok")
 	})
 

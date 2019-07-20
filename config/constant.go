@@ -7,7 +7,7 @@ const PRODUCE_PORT = "8888"
 const DEFAULT_PATH = "logs/"
 
 // 配置文件路径
-const CONFIG_PATH = "../../config.yml"
+const CONFIG_PATH = "config.yml"
 
 // redis队列键名前缀
 const REDIS_LIST_KEY = "log"

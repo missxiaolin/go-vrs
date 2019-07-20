@@ -52,7 +52,7 @@ func main()  {
 	})
 
 	// 协程池测试
-	g.GET("/send", func(c *gin.Context) {
+	g.GET("/redis/send", func(c *gin.Context) {
 		for i := 0; i < 50000; i++ {
 			_ = p.Submit(func() {
 				data := Model.Data{
@@ -66,7 +66,7 @@ func main()  {
 				if err != nil {
 					log.Fatal(err)
 				}
-				redix.LPush("vrs:log", b)
+				redix.LPush(config.Cfg.Redis.ListKey, b)
 			})
 		}
 		c.String(http.StatusOK, "ok")

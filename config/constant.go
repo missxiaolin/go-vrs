@@ -10,7 +10,7 @@ const DEFAULT_PATH = "logs/"
 const CONFIG_PATH = "config.yml"
 
 // redis队列键名前缀
-const REDIS_LIST_KEY = "log"
+const REDIS_LIST_KEY = "vrs:log"
 
 // redis最大内存
 const REDIS_MAX_MEMORY int64 = 1024 * 1024 * 1024 * 1024 * 1 // 1GB

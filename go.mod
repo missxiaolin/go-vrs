@@ -15,4 +15,5 @@ require (
 	github.com/xdg/stringprep v1.0.0 // indirect
 	github.com/zctod/go-tool v0.0.3
 	go.mongodb.org/mongo-driver v1.0.4
+	gopkg.in/yaml.v2 v2.2.2
 )

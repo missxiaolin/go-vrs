@@ -1,0 +1,19 @@
+produce:
+  port: "8080"
+  pool_max_capacity: 0
+consume:
+  batch_num: 123
+  sleep_interval: 1
+  pool_max_capacity: 0
+  trigger_count: 0
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  max_memory: 1099511627776  # 1GB
+mongodb:
+  host: "localhost:27017"
+  username: ""
+  password: ""
+  database: "test"
+  collection: "test"

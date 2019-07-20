@@ -22,14 +22,14 @@ var redix *redis.Client
 func init()  {
 	if redix == nil {
 		redix = redis.NewClient(&redis.Options{
-			Addr:     "127.0.0.1",
-			Password: "",
-			DB:       0,
+			Addr:     config.Cfg.Redis.Addr,
+			Password: config.Cfg.Redis.Password,
+			DB:       config.Cfg.Redis.DB,
 		})
 	}
 	if p == nil {
 		var err error
-		p, err = pool.NewPool(0)
+		p, err = pool.NewPool(config.Cfg.Produce.PoolMaxCapacity)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -77,7 +77,7 @@ func main()  {
 
 func startServer (g *gin.Engine)  {
 	server := &http.Server{
-		Addr:           ":" + config.PRODUCE_PORT,
+		Addr:           ":" + config.Cfg.Produce.Port,
 		Handler:        g,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,

@@ -10,6 +10,7 @@ import (
 	"go-vrs/Model"
 	"go-vrs/bootstrap"
 	"go-vrs/config"
+	"go-vrs/entry/produce/routes"
 	"go-vrs/lib/logger"
 	"go-vrs/lib/pool"
 	"log"
@@ -42,7 +43,7 @@ func newApp() *bootstrap.Bootstrapper {
 	// 初始化应用
 	app := bootstrap.New("日志收集", "xiaolin")
 	app.Bootstrap()
-	//app.Configure(identity.Configure, routes.Configure)
+	app.Configure(routes.Configure)
 
 	return app
 }
@@ -51,23 +52,11 @@ func main()  {
 
 	app := newApp()
 
-
-	app.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello produce!")
-	})
-
 	startServer(app)
 
 
 
 
-	//g := gin.Default()
-	//
-	//// 程序测试
-	//g.GET("/", func(c *gin.Context) {
-	//	c.String(http.StatusOK, "Hello produce!")
-	//})
-	//
 	//g.GET("/log/file", func(c *gin.Context) {
 	//	logs.Println("12312")
 	//	logs.Warningln("test")

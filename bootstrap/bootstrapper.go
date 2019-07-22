@@ -34,6 +34,13 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	return b
 }
 
+// Configure accepts configurations and runs them inside the Bootstraper's context.
+func (b *Bootstrapper) Configure(cs ...Configurator) {
+	for _, c := range cs {
+		c(b)
+	}
+}
+
 // Bootstrap prepares our application.
 //
 // Returns itself.

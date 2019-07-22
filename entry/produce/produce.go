@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/zctod/go-tool/common/util_server"
 	"go-vrs/Model"
+	"go-vrs/bootstrap"
 	"go-vrs/config"
 	"go-vrs/lib/logger"
 	"go-vrs/lib/pool"
@@ -37,52 +38,74 @@ func init()  {
 	}
 }
 
-func main()  {
-	g := gin.Default()
+func newApp() *bootstrap.Bootstrapper {
+	// 初始化应用
+	app := bootstrap.New("日志收集", "xiaolin")
+	app.Bootstrap()
+	//app.Configure(identity.Configure, routes.Configure)
 
-	// 程序测试
-	g.GET("/", func(c *gin.Context) {
+	return app
+}
+
+func main()  {
+
+	app := newApp()
+
+
+	app.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello produce!")
 	})
 
-	g.GET("/log/file", func(c *gin.Context) {
-		logs.Println("12312")
-		logs.Warningln("test")
+	startServer(app)
 
-		c.String(http.StatusOK, "ok")
-	})
 
-	// 协程池测试
-	g.GET("/redis/send", func(c *gin.Context) {
-		for i := 0; i < 50000; i++ {
-			_ = p.Submit(func() {
-				data := Model.Data{
-					Uid:        0,
-					IP:         "127.0.0.1",
-					Content:    "Hello World!",
-					CreateTime: time.Now().UnixNano() / 1e3, // 微秒
-				}
 
-				b, err := json.Marshal(data)
-				if err != nil {
-					log.Fatal(err)
-				}
-				redix.LPush(config.Cfg.Redis.ListKey, b)
-			})
-		}
-		c.String(http.StatusOK, "ok")
-	})
 
-	// 日志推送接收接口
-	g.POST("/push", LogPush)
-
-	startServer(g)
+	//g := gin.Default()
+	//
+	//// 程序测试
+	//g.GET("/", func(c *gin.Context) {
+	//	c.String(http.StatusOK, "Hello produce!")
+	//})
+	//
+	//g.GET("/log/file", func(c *gin.Context) {
+	//	logs.Println("12312")
+	//	logs.Warningln("test")
+	//
+	//	c.String(http.StatusOK, "ok")
+	//})
+	//
+	//// 协程池测试
+	//g.GET("/redis/send", func(c *gin.Context) {
+	//	for i := 0; i < 50000; i++ {
+	//		_ = p.Submit(func() {
+	//			data := Model.Data{
+	//				Uid:        0,
+	//				IP:         "127.0.0.1",
+	//				Content:    "Hello World!",
+	//				CreateTime: time.Now().UnixNano() / 1e3, // 微秒
+	//			}
+	//
+	//			b, err := json.Marshal(data)
+	//			if err != nil {
+	//				log.Fatal(err)
+	//			}
+	//			redix.LPush(config.Cfg.Redis.ListKey, b)
+	//		})
+	//	}
+	//	c.String(http.StatusOK, "ok")
+	//})
+	//
+	//// 日志推送接收接口
+	//g.POST("/push", LogPush)
+	//
+	//startServer(g)
 }
 
-func startServer (g *gin.Engine)  {
+func startServer (b *bootstrap.Bootstrapper)  {
 	server := &http.Server{
 		Addr:           ":" + config.Cfg.Produce.Port,
-		Handler:        g,
+		Handler:        b,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,

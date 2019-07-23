@@ -5,6 +5,7 @@ import (
 	"github.com/zctod/go-tool/common/util_server"
 	"go-vrs/bootstrap"
 	"go-vrs/config"
+	"go-vrs/entry/produce/middleware"
 	"go-vrs/entry/produce/routes"
 	"net/http"
 	"time"
@@ -21,6 +22,7 @@ func newApp() *bootstrap.Bootstrapper {
 
 func main()  {
 	app := newApp()
+	app.Use(middleware.Cors())
 	startServer(app)
 }
 

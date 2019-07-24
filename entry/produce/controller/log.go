@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"go-vrs/Model"
 	"go-vrs/config"
 	"go-vrs/lib/logger"
@@ -22,6 +23,11 @@ func LogFile (c *gin.Context)  {
 
 // 检查redis list占用内存
 func checkRedisMemory() error {
+	redix = redis.NewClient(&redis.Options{
+		Addr:     config.Cfg.Redis.Addr,
+		Password: config.Cfg.Redis.Password,
+		DB:       config.Cfg.Redis.DB,
+	})
 
 	cmd := redix.MemoryUsage(config.Cfg.Redis.ListKey)
 	size, err := cmd.Result()

@@ -15,25 +15,19 @@ import (
 var p *pool.Pool
 var redix *redis.Client
 
-func init()  {
-	if redix == nil {
-		redix = redis.NewClient(&redis.Options{
-			Addr:     config.Cfg.Redis.Addr,
-			Password: config.Cfg.Redis.Password,
-			DB:       config.Cfg.Redis.DB,
-		})
-	}
-	if p == nil {
-		var err error
-		p, err = pool.NewPool(config.Cfg.Produce.PoolMaxCapacity)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 // 协程池测试
 func RedisSend(c *gin.Context) {
+	p, err := pool.NewPool(config.Cfg.Produce.PoolMaxCapacity)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	redix = redis.NewClient(&redis.Options{
+		Addr:     config.Cfg.Redis.Addr,
+		Password: config.Cfg.Redis.Password,
+		DB:       config.Cfg.Redis.DB,
+	})
+
 	for i := 0; i < 50000; i++ {
 		_ = p.Submit(func() {
 			data := Model.Data{
